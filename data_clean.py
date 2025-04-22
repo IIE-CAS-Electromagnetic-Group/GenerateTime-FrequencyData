@@ -14,36 +14,41 @@ def fill_missing_data_in_csv(directory="/path/to/your/directory"):
             file_path = os.path.join(directory, filename)
 
             try:
+                # 读取CSV文件时明确指定列名
                 df = pd.read_csv(file_path, delimiter=',')
 
                 if df.shape[1] >= 1:
-                    # 将第一列转换为datetime类型
-                    df.iloc[:, 0] = pd.to_datetime(df.iloc[:, 0], format='%Y-%m-%d %H:%M:%S', errors='coerce')
+                    # 保存原始列名
+                    original_col_name = df.columns[0]
 
-                    start_date = df.iloc[0, 0]
-                    end_date = df.iloc[-1, 0]
+                    # 将第一列转换为datetime类型
+                    df[original_col_name] = pd.to_datetime(df[original_col_name], format='%Y-%m-%d %H:%M:%S',
+                                                           errors='coerce')
+
+                    start_date = df.iloc[0][original_col_name]
+                    end_date = df.iloc[-1][original_col_name]
 
                     # 检查是否有缺失的时间步
                     date_range = pd.date_range(start=start_date, end=end_date, freq='1s')
 
-                    if len(date_range) > len(df):
-                        complete_df = pd.DataFrame(index=date_range)
+                    complete_df = pd.DataFrame(index=date_range)
 
-                        df.set_index(df.iloc[:, 0], inplace=True)
-                        df.drop(df.columns[0], axis=1, inplace=True)
+                    # 设置索引并保留列名
+                    df.set_index(original_col_name, inplace=True)
 
-                        complete_df = complete_df.join(df)
-                        complete_df.ffill(inplace=True)
+                    complete_df = complete_df.join(df)
+                    complete_df.ffill(inplace=True)
 
-                        complete_df.reset_index(inplace=True)
-                        complete_df.rename(columns={'index': df.columns[0]}, inplace=True)
-                        complete_df.iloc[:, 0] = complete_df.iloc[:, 0].dt.strftime('%Y/%m/%d %H:%M:%S')
+                    # 重置索引并恢复原始列名
+                    complete_df.reset_index(inplace=True)
+                    complete_df.rename(columns={'index': original_col_name}, inplace=True)
 
-                        # 保存回原文件
-                        complete_df.to_csv(file_path, index=False)
-                        print(f"Processed {filename}: filled {len(date_range) - len(df)} missing rows")
-                    else:
-                        print(f"No missing data in {filename}")
+                    # 格式化日期列
+                    complete_df[original_col_name] = complete_df[original_col_name].dt.strftime('%Y/%m/%d %H:%M:%S')
+
+                    # 保存回原文件
+                    complete_df.to_csv(file_path, index=False)
+                    print(f"Processed {filename}: filled {len(date_range) - len(df)} missing rows")
                 else:
                     print(f"File {filename} does not have enough columns")
             except Exception as e:
