@@ -61,11 +61,13 @@ def plot_trace_heatmap(csv_file_path, html_save_path="default.html"):
     '''fig.write_html(html_save_path)
 
     print(f"热图已保存到: {html_save_path}")'''
-
+    return fig
 
 
 
 
 if __name__=="__main__":
     print("start")
-    plot_trace_heatmap(csv_file_path="D:/0-30MHz电梯/信息工程研究所/0_30MHz原始信号数据/20240925111821_20240925171821_0.009_30.0.csv")
+    #plot_trace_heatmap(csv_file_path="D:/0-30MHz电梯/信息工程研究所/0_30MHz原始信号数据/20240925111821_20240925171821_0.009_30.0.csv")
+    fig=plot_trace_heatmap(csv_file_path="E:\\24L01预处理\\2485_2495MHz原始信号数据\\20250328151803_20250328152303_2485.0_2495.0.csv")
+    fig.write_html("24L01.html")

@@ -13,7 +13,7 @@ from functools import reduce
 
 
 # 获取该文件夹中所有的bin文件路径
-def get_all_file_list(bin_file_dir="F:\频谱迹线采集\葛洲坝电厂\\11\TraceRecord",select_start_freq=0,select_stop_freq=10):
+def get_all_file_list(bin_file_dir,select_start_freq,select_stop_freq):
     print("获取该文件夹中所有的（有效的）bin文件路径:"+bin_file_dir)
     print("get_all_file_list 起始频率:"+str(select_start_freq))
     print("get_all_file_list 终止频率:"+str(select_stop_freq))
@@ -82,37 +82,35 @@ def complete_datetime_string(time_str):
     # 当前日期和时间
     now = datetime.now()
     # 检查并补全时间字符串
-    try:
-        if len(time_str) == 10:
-            # 输入格式为 'YYYY-MM-DD'
-            complete_str = f"{time_str} 00:00:00"
-        elif len(time_str) == 8:
-            # 输入格式为 'HH:MM:SS'
-            complete_str = f"{now.strftime('%Y-%m-%d')} {time_str}"
-        elif len(time_str) == 16:
-            # 输入格式为 'YYYY-MM-DD HH:MM'
-            complete_str = f"{time_str}:00"
-        elif len(time_str) == 13:
-            # 输入格式为 'YYYY-MM-DD HH'
-            complete_str = f"{time_str}:00:00"
-        elif len(time_str) == 19:
-            # 输入格式为 'YYYY-MM-DD HH:MM:SS'
-            complete_str = time_str
-        elif len(time_str) == 23:
-            complete_str, _ = time_str.split(".")
-        else:
-            raise ValueError("未知的时间格式")
-
-        # 将补全后的字符串转换为 datetime 对象以验证其有效性
-        complete_datetime = datetime.strptime(complete_str, '%Y-%m-%d %H:%M:%S')
-        return complete_datetime
-    except ValueError as e:
-        print(f"输入时间字符串格式无效: {e}")
-    return None
 
 
-def produce_date_intervals(bin_file_dir, start_date, stop_date, minute_of_picture):
-    all_file_path = get_all_file_list(bin_file_dir)
+    if len(time_str) == 10:
+        # 输入格式为 'YYYY-MM-DD'
+        complete_str = f"{time_str} 00:00:00"
+    elif len(time_str) == 8:
+        # 输入格式为 'HH:MM:SS'
+        complete_str = f"{now.strftime('%Y-%m-%d')} {time_str}"
+    elif len(time_str) == 16:
+        # 输入格式为 'YYYY-MM-DD HH:MM'
+        complete_str = f"{time_str}:00"
+    elif len(time_str) == 13:
+        # 输入格式为 'YYYY-MM-DD HH'
+        complete_str = f"{time_str}:00:00"
+    elif len(time_str) == 19:
+        # 输入格式为 'YYYY-MM-DD HH:MM:SS'
+        complete_str = time_str
+    elif len(time_str) == 23:
+        complete_str, _ = time_str.split(".")
+
+
+    # 将补全后的字符串转换为 datetime 对象以验证其有效性
+    complete_datetime = datetime.strptime(complete_str, '%Y-%m-%d %H:%M:%S')
+    return complete_datetime
+
+
+
+def produce_date_intervals(bin_file_dir, start_date, stop_date, minute_of_picture,select_start_freq,select_stop_freq):
+    all_file_path = get_all_file_list(bin_file_dir,select_start_freq=select_start_freq,select_stop_freq=select_stop_freq)
     first_bin_file_path = all_file_path[0]
     last_bin_file_path = all_file_path[-1]
 
@@ -788,7 +786,7 @@ def downsample_by_date(data, seconds_step,voltage_threshold,method="mean"):
 
 
 def produce_freq_intervals_with_picturenum(bin_file_dir, select_start_freq, select_stop_freq, picture_num ):
-    all_file_path = get_all_file_list(bin_file_dir)
+    all_file_path = get_all_file_list(bin_file_dir,select_start_freq,select_stop_freq)
     bin_file_path = all_file_path[0]
     message_list = bin_file_path.split('_')
     # 起始终止频率

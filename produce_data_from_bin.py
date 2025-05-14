@@ -1,3 +1,5 @@
+from fontTools.misc.plistlib import end_false
+
 from methods.read_and_sample_method import *
 from methods.convert_windows_and_linux_path import convert_paths
 from methods.process_one_bin_file import generate_one_data_from_center_list, generate_one_data
@@ -116,7 +118,7 @@ def generate_trace_data(bin_file_dir = "G:/Work/Workspace/Data/原始数据/信�
     output_dir = convert_paths(output_dir)
 
     # 生成日期区间和频率区间列表
-    date_list = produce_date_intervals(bin_file_dir, start_date, stop_date, minute_of_picture)
+    date_list = produce_date_intervals(bin_file_dir, start_date, stop_date, minute_of_picture,select_start_freq,select_stop_freq)
     intervals_list = produce_freq_intervals_with_picturenum(bin_file_dir, select_start_freq, select_stop_freq, picture_num)
     print("日期区间:"+str(date_list))
     print("频率区间:"+str(intervals_list))
@@ -146,14 +148,25 @@ if __name__ == "__main__":
                                center_freq_list=[7.5],
                                bandwidth=0.1,
                                prefix_path= "E:/20250310迹线预处理")'''
-    generate_trace_data(bin_file_dir="D:/iie/Data/原始数据/信息工程研究所/0_30MHz",
-                        select_start_freq=1.38,
-                        select_stop_freq=1.91,
-                        start_date="2024-09-25 00:00",
-                        stop_date="2025-10-17 00:00",
+    '''generate_trace_data(bin_file_dir="D:/iie/Data/原始数据/信息工程研究所/0_30MHz",
+                        select_start_freq=1.2,
+                        select_stop_freq=2.0,
+                        start_date="2024-09-26 00:00",
+                        stop_date="2024-10-16 00:00",
                         picture_num=1,
                         minute_of_picture='6H',
                         resample_time=1,
                         resample_freq_num=1000,
-                        prefix_path="D:/信工所电梯1.38-1.91"
+                        prefix_path="D:/信工所电梯1.2-2.0"
+                        )'''
+    generate_trace_data(bin_file_dir="E:\\24L01",
+                        select_start_freq=2485,
+                        select_stop_freq=2495,
+                        start_date="2025-03-28 15:18",
+                        stop_date="2024-04-06 00:00",
+                        picture_num=1,
+                        minute_of_picture='6H',
+                        resample_time=1,
+                        resample_freq_num=200,
+                        prefix_path="E:/24L012485"
                         )

@@ -1,4 +1,6 @@
-from sample_original_data.methods.read_and_sample_method import *
+import pandas as pd
+
+from methods.read_and_sample_method import *
 
 def generate_one_data_from_center_list(bin_file_dir,center_freq_list, bandwidth, intervals_start_date,
                          intervals_stop_date,resample_time,output_dir):
@@ -105,17 +107,22 @@ def generate_one_data(bin_file_dir, intervals_start_freq, intervals_stop_freq, i
         - output_dir: 输出目录，用于保存处理后的数据。
     """
     print("------------generate_one_data 开始----------------")
-    all_file_path = get_all_file_list(bin_file_dir)
+    all_file_path = get_all_file_list(bin_file_dir,intervals_start_freq,intervals_stop_freq)
     all_value_list = []
     all_date_list=[]
     key_list = None
     point_num=None
     read_point_num=None
     filter_freq_list=None
+
+    intervals_start_date=pd.to_datetime(intervals_start_date)
+    intervals_stop_date=pd.to_datetime(intervals_stop_date)
+
     for file_path in all_file_path:
         last_modified_timestamp = os.path.getmtime(file_path)
         last_modified_date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(last_modified_timestamp))
         # 根据时间筛选文件
+        print("根据时间筛选文件")
         if (complete_datetime_string(last_modified_date) < intervals_start_date):
             continue# 如果文件修改时间早于起始时间，跳过
         elif (complete_datetime_string(get_file_create_time(file_path)) > intervals_stop_date):
@@ -186,6 +193,7 @@ def generate_one_data(bin_file_dir, intervals_start_freq, intervals_stop_freq, i
     df.set_index('date', inplace=True)
 
     if (not os.path.exists(output_dir)):
+        print(f"创建目录：{output_dir}")
         os.makedirs(output_dir)
         pass
     other_message = str(intervals_start_freq) + '_' + str(intervals_stop_freq)
@@ -211,3 +219,13 @@ def generate_one_data(bin_file_dir, intervals_start_freq, intervals_stop_freq, i
     plot_trace_heatmap(df, jpg_save_path)
     # plot_trace_surface(df, jpg_save_path)
     pass
+
+if __name__=="__main__":
+    generate_one_data(bin_file_dir="E:\\24L01",
+                      intervals_start_freq=2485,
+                      intervals_stop_freq=2495,
+                      intervals_start_date="2025-03-28 15:17",
+                      intervals_stop_date="2025-04-06 00:00",
+                      resample_time=0,
+                      resample_point_num=200000,
+                      output_dir="E:/24L012485")
