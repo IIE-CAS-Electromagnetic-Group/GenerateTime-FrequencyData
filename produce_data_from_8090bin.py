@@ -306,8 +306,8 @@ def generate_trace_data_from_8090bin():
     # 设置生成图片的参数
     picture_num = 1  # 图片数量
     minute_of_picture = '10T'  # 每张图片的时间跨度（10分钟）
-    resample_time = 1  # 时间重采样参数
-    resample_freq_num = 1000  # 频率重采样参数
+    resample_time = 0.01  # 时间重采样参数
+    resample_freq_num = 200  # 频率重采样参数
     # 参数为后期经过探索得出
 
     #start_date=pd.to_datetime(start_date)

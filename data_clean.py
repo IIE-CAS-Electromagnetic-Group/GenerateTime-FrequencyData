@@ -3,8 +3,11 @@ import os
 import pandas as pd
 from datetime import datetime, timedelta
 
+from bokeh.core.property.datetime import TimeDelta
+from sympy.physics.units import minutes
 
-def fill_missing_data_in_csv(directory="/path/to/your/directory"):
+
+def fill_missing_data_in_csv(directory="/path/to/your/directory",min_time_minutes=None):
     """
     遍历目录下的所有频谱文件。
     如果时间步中有缺失，则用前一行的数据来填充缺失行，并覆盖原文件。
@@ -21,11 +24,14 @@ def fill_missing_data_in_csv(directory="/path/to/your/directory"):
                 original_col_name = df.columns[0]
 
                 # 将第一列转换为datetime类型
-                df[original_col_name] = pd.to_datetime(df[original_col_name], format='%Y-%m-%d %H:%M:%S',
-                                                       errors='coerce')
+                df[original_col_name] = pd.to_datetime(df[original_col_name])
                 print(df[original_col_name])
                 start_date = df.iloc[0][original_col_name]
                 end_date = df.iloc[-1][original_col_name]
+
+                if not min_time_minutes==None:
+                    end_date=(start_date+timedelta(minutes=min_time_minutes)).strftime('%Y-%m-%d %H:%M:%S')
+
 
                 # 检查是否有缺失的时间步
                 date_range = pd.date_range(start=start_date, end=end_date, freq='1s')
@@ -84,6 +90,6 @@ def del_short_signal_record(csv_file):
 
 
 if __name__=="__main__":
-    fill_missing_data_in_csv("D:\iie\Python_Workspace\Time-Series-Library-main\数据集\电梯信号\\raw_data\\test_raw_data")
+    fill_missing_data_in_csv("D:\信工所电梯0.5-4\\0.5_4MHz原始信号")
     #del_short_signal_record("D:\iie\Python_Workspace\Time-Series-Library-main\数据集\葛洲坝\\raw_data\signal_record_and_feature\\train_signal_record_and_feature.csv")
     #fill_missing_data_in_csv(".")

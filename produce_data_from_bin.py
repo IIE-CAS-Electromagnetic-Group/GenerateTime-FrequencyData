@@ -148,25 +148,14 @@ if __name__ == "__main__":
                                center_freq_list=[7.5],
                                bandwidth=0.1,
                                prefix_path= "E:/20250310迹线预处理")'''
-    '''generate_trace_data(bin_file_dir="D:/iie/Data/原始数据/信息工程研究所/0_30MHz",
-                        select_start_freq=1.2,
-                        select_stop_freq=2.0,
+    generate_trace_data(bin_file_dir="D:/iie/Data/原始数据/信息工程研究所/0_30MHz",
+                        select_start_freq=0.5,
+                        select_stop_freq=4,
                         start_date="2024-09-26 00:00",
                         stop_date="2024-10-16 00:00",
                         picture_num=1,
-                        minute_of_picture='6H',
+                        minute_of_picture='10T',
                         resample_time=1,
-                        resample_freq_num=1000,
-                        prefix_path="D:/信工所电梯1.2-2.0"
-                        )'''
-    generate_trace_data(bin_file_dir="E:\\24L01",
-                        select_start_freq=2485,
-                        select_stop_freq=2495,
-                        start_date="2025-03-28 15:18",
-                        stop_date="2024-04-06 00:00",
-                        picture_num=1,
-                        minute_of_picture='6H',
-                        resample_time=1,
-                        resample_freq_num=200,
-                        prefix_path="E:/24L012485"
+                        resample_freq_num=100,
+                        prefix_path="D:/信工所电梯0.5-4"
                         )
